@@ -2,19 +2,10 @@
 import logging
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, request
-uwsgi_present = False
-try:
-    import uwsgi
-    uwsgi_present = True
-except ImportError:
-
-    logger = logging.getLogger( 'init.uwsgi' )
-    uwsgi_present = False
-    logger.warning( 'uwsgi not present; connection locking unavailable.' )
+from .config import Config
 
 # Setup the database stuff.
 db = SQLAlchemy()
-uwsgiimport
 
 def create_app():
 
@@ -28,8 +19,12 @@ def create_app():
         cfg = Config( config_f )
         app.config.from_object( cfg )
 
+    db.init_app( app )
+
     with app.app_context():
         from . import routes
+
+        db.create_all()
 
         return app
 

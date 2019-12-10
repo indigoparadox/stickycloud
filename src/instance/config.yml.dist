@@ -1,0 +1,4 @@
+---
+development: True
+secret_key: development
+db_uri: sqlite:///dev.db
